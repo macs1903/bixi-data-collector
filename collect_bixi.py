@@ -1,9 +1,12 @@
 import requests
 import pandas as pd
 from datetime import datetime
+import os
 
 url_info = "https://gbfs.velobixi.com/gbfs/2-2/fr/station_information.json"
 url_status = "https://gbfs.velobixi.com/gbfs/2-2/fr/station_status.json"
+
+OUTPUT_FILE = "bixi_realtime.csv"
 
 def collect():
     info = requests.get(url_info).json()['data']['stations']
@@ -30,7 +33,11 @@ def collect():
         })
 
     df = pd.DataFrame(stations_list)
-    df.to_csv("bixi_realtime.csv", mode="a", header=False, index=False)
+
+    # Vérifie si le fichier existe déjà
+    write_header = not os.path.exists(OUTPUT_FILE)
+
+    df.to_csv(OUTPUT_FILE, mode="a", header=write_header, index=False)
 
 if __name__ == "__main__":
     collect()
