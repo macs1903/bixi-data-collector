@@ -3,12 +3,14 @@ import pandas as pd
 from datetime import datetime
 import os
 
+OUTPUT_FILE = "bixi_realtime.csv"
+
+# --- URLs Bixi ---
 url_info = "https://gbfs.velobixi.com/gbfs/2-2/fr/station_information.json"
 url_status = "https://gbfs.velobixi.com/gbfs/2-2/fr/station_status.json"
 
-OUTPUT_FILE = "bixi_realtime.csv"
-
 def collect():
+    # Récupération des infos et statuts
     info = requests.get(url_info).json()['data']['stations']
     status = requests.get(url_status).json()['data']['stations']
 
@@ -34,9 +36,8 @@ def collect():
 
     df = pd.DataFrame(stations_list)
 
-    # Vérifie si le fichier existe déjà
+    # Si le fichier existe, on ajoute sans header ; sinon, on crée avec header
     write_header = not os.path.exists(OUTPUT_FILE)
-
     df.to_csv(OUTPUT_FILE, mode="a", header=write_header, index=False)
 
 if __name__ == "__main__":
