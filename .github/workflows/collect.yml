@@ -11,6 +11,8 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false   # important ! bixi_realtime.csv
 
       - name: Setup Python
         uses: actions/setup-python@v5
@@ -23,12 +25,13 @@ jobs:
       - name: Run Bixi collection
         run: python collect_bixi.py
 
-      - name: Commit & Push CSV
+      - name: Commit and push
         env:
           GH_PAT: ${{ secrets.GH_PAT }}
         run: |
-          git config --local user.email "actions@github.com"
-          git config --local user.name "GitHub Actions"
+          git config --global user.name "macs1903"
+          git config --global user.email "macs1903@users.noreply.github.com"
+          git remote set-url origin https://macs1903:${GH_PAT}@github.com/macs1903/bixi-data-collector.git
           git add bixi_realtime.csv
-          git commit -m "Update Bixi CSV [skip ci]" || echo "No changes to commit"
-          git push https://x-access-token:${GH_PAT}@github.com/macs1903/bixi-data-collector.git HEAD:main
+          git commit -m "Test commit [skip ci]" || echo "No changes"
+          git push origin HEAD:main
