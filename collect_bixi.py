@@ -46,7 +46,7 @@ for s in status:
     })
 
 # Créer le DataFrame
-df_stations = pd.DataFrame(stations_list)
+df = pd.DataFrame(stations_list)
 
 # Si le fichier existe, on ajoute sans header ; sinon, on crée avec header
 write_header = not os.path.exists(OUTPUT_FILE)
